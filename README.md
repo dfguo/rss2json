@@ -1,0 +1,1 @@
+This is a rails app that converts rss feed to json. It uses the service provided by http://www.blastcasta.com/feed-to-json.aspx
