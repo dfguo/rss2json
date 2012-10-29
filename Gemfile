@@ -44,3 +44,5 @@ end
 
 gem 'memcachier'
 gem 'dalli'
+
+gem 'unicorn'
