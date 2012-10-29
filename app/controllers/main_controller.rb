@@ -15,7 +15,7 @@ class MainController < ApplicationController
     
     if @errors.empty?
       json_object = fetch_json_from_rss(rss_feed)
-      @errors << "Not a valid rss feed." if json_object.nil?
+      @errors << "Not a valid rss feed." if json_object.nil? or json_object['error']
     end
     
     if @errors.empty? 
@@ -35,7 +35,7 @@ class MainController < ApplicationController
         content = open("http://www.blastcasta.com/feed-to-json.aspx?feedurl=#{URI.escape(rss_feed)}").read
         json_object = JSON.parse(content)
       rescue
-        json_object = nil
+        json_object = {'error' => true}.to_json # default value for a faulty url
       end
       Rails.cache.write(rss_feed, json_object, :expires_in => 25.minutes)
     end
