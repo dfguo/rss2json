@@ -46,3 +46,4 @@ gem 'memcachier'
 gem 'dalli'
 
 gem 'unicorn'
+gem 'newrelic_rpm'
