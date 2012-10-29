@@ -15,8 +15,7 @@ class MainController < ApplicationController
     
     if @errors.empty?
       begin
-        content = open("http://www.blastcasta.com/feed-to-json.aspx?feedurl=#{URI.escape(rss_feed)}").read
-        json_object = JSON.parse(content)
+        json_object = fetch_json_from_rss(rss_feed)
       rescue
         @errors << "Not a valid rss feed."
       end
@@ -31,6 +30,14 @@ class MainController < ApplicationController
   
   
   private
+  
+  def fetch_json_from_rss(rss_feed)
+    Rails.cache.fetch(rss_feed, :expires_in => 25.minutes) {
+      content = open("http://www.blastcasta.com/feed-to-json.aspx?feedurl=#{URI.escape(rss_feed)}").read
+      json_object = JSON.parse(content)
+    }
+  end
+    
   def uri?(string)
     uri = URI.parse(string)
     %w( http https ).include?(uri.scheme)
