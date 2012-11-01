@@ -34,12 +34,12 @@ class MainController < ApplicationController
       begin
         content = open("http://www.blastcasta.com/feed-to-json.aspx?feedurl=#{URI.escape(rss_feed)}").read
         json_object = JSON.parse(content)
+        Rails.cache.write(rss_feed, json_object, :expires_in => 25.minutes)
       rescue
         json_object = {'error' => true}.to_json # default value for a faulty url
+        Rails.cache.write(rss_feed, json_object, :expires_in => 10.seconds)
       end
-      Rails.cache.write(rss_feed, json_object, :expires_in => 25.minutes)
     end
-    
     json_object
   end
     
